@@ -9,4 +9,4 @@ The benefits of this approach:
 - Very basic implementation is needed for 3rd party apps.
 
 
-See [Wiki](wiki) for more details.
+See [Wiki](../../wiki) for more details.
