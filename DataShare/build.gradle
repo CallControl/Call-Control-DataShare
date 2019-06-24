@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:support-annotations:28.0.0'
+}
+
+
+task javadoc (type: Javadoc) {
+    source = project.android.sourceSets.main.java.srcDirs
+    options.linkSource true
+    classpath += project.files(project.android.getBootClasspath().join(File.pathSeparator))
+    failOnError false
+}
