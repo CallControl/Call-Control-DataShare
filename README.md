@@ -1,5 +1,7 @@
 # Call Control DataShare
 
+[ ![Download](https://api.bintray.com/packages/callcontrol/opensource/DataShare/images/download.svg) ](https://bintray.com/callcontrol/opensource/DataShare/_latestVersion)
+
 Call Control DataShare is a mechanism which allows other apps to interact with [Call Control for Android](https://play.google.com/store/apps/details?id=com.flexaspect.android.everycallcontrol) application. It allows to enable powerful calls/texts blocking possibilities in 3rd party apps without significant effort. 
 
 The benefits of this approach:
@@ -10,3 +12,28 @@ The benefits of this approach:
 
 
 See [Wiki](wiki) for more details.
+
+## Adding to Your Project
+
+To integrate with Call Control you need to install Call Control from [Google Play](https://play.google.com/store/apps/details?id=com.flexaspect.android.everycallcontrol), then in your application's `build.gradle` add the following dependency:
+
+```gradle
+dependencies {
+	...
+	implementation 'com.callcontrol:datashare:1.0.0'
+	...
+}
+
+```
+
+That's all you need to do to integrate, you can now use all power of Call Control!
+
+Please refer to [Wiki](wiki) and [javadoc](https://callcontrol.github.io/Call-Control-DataShare/) for more details.
+
+## License
+
+Call Control DataShare is released under the MIT license.
+See [LICENSE](./LICENSE) for details.
+
+---
+_Call Control® is a registered trademark of Call Control, LLC_
