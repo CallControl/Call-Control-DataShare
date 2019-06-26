@@ -254,10 +254,23 @@ public final class CallControl {
      * Opens Blocked List in Call Control.
      *
      * @param context Context where {@link Context#startActivity(Intent)} will be executed.
+     *
      * @return True if the intent has been sent, false on error.
      */
     public static boolean openBlockedList(@NonNull Context context) {
-        return openBlockedList(context, null);
+        return openBlockedList(context, null, 0);
+    }
+
+    /**
+     * Opens Blocked List in Call Control.
+     *
+     * @param context     Context where {@link Context#startActivity(Intent)} will be executed.
+     * @param intentFlags Flags that should be set to the {@link Intent}. See {@link Intent#setFlags(int)} for details.
+     *
+     * @return True if the intent has been sent, false on error.
+     */
+    public static boolean openBlockedList(@NonNull Context context, int intentFlags) {
+        return openBlockedList(context, null, intentFlags);
     }
 
     /**
@@ -266,11 +279,27 @@ public final class CallControl {
      *
      * @param context     Context where {@link Context#startActivity(Intent)} will be executed.
      * @param phoneNumber Phone number to present.
+     *
      * @return True if the intent has been sent, false on error.
      */
     public static boolean openBlockedList(@NonNull Context context, @Nullable String phoneNumber) {
+        return openBlockedList(context, phoneNumber, 0);
+    }
+
+    /**
+     * Opens specified number in Blocked List in Call Control if possible.
+     * <p>If the number is null, the behavior is identical to {@link #openBlockedList(Context)}.
+     *
+     * @param context     Context where {@link Context#startActivity(Intent)} will be executed.
+     * @param phoneNumber Phone number to present.
+     * @param intentFlags Flags that should be set to the {@link Intent}. See {@link Intent#setFlags(int)} for details.
+     *
+     * @return True if the intent has been sent, false on error.
+     */
+    public static boolean openBlockedList(@NonNull Context context, @Nullable String phoneNumber, int intentFlags) {
         Intent i = new Intent(ACTION_BLOCKED_LIST);
         if (null != phoneNumber) i.putExtra(EXTRA_PHONE_NUMBER, phoneNumber);
+        if (0 != intentFlags) i.setFlags(intentFlags);
         if (!signIntent(context, i)) return false;
         context.startActivity(i);
         return true;
@@ -281,11 +310,26 @@ public final class CallControl {
      *
      * @param context     Context where {@link Context#startActivity(Intent)} will be executed.
      * @param phoneNumber Phone number to lookup.
+     *
      * @return True if the intent has been sent, false on error.
      */
     public static boolean lookupNumber(@NonNull Context context, @NonNull String phoneNumber) {
+        return lookupNumber(context, phoneNumber, 0);
+    }
+
+    /**
+     * Performs a number lookup in Call Control UI.
+     *
+     * @param context     Context where {@link Context#startActivity(Intent)} will be executed.
+     * @param phoneNumber Phone number to lookup.
+     * @param intentFlags Flags that should be set to the {@link Intent}. See {@link Intent#setFlags(int)} for details.
+     *
+     * @return True if the intent has been sent, false on error.
+     */
+    public static boolean lookupNumber(@NonNull Context context, @NonNull String phoneNumber, int intentFlags) {
         Intent i = new Intent(ACTION_LOOKUP);
         i.putExtra(EXTRA_PHONE_NUMBER, phoneNumber);
+        if (0 != intentFlags) i.setFlags(intentFlags);
         if (!signIntent(context, i)) return false;
         context.startActivity(i);
         return true;
@@ -298,12 +342,28 @@ public final class CallControl {
      *
      * @param context    Context where {@link Context#startActivity(Intent)} will be executed.
      * @param report     Report about a number.
+     *
      * @return True if the intent has been sent, false on error.
      */
     public static boolean report(@NonNull Context context, @NonNull Report report) {
+        return report(context, report, 0);
+    }
+
+    /**
+     * Reports a number via Call Control UI.
+     * <p>Will present Call Control UI which interacts with user.
+     * <p>After user confirms the report, he is asked if he wants to also add the number to Blocked List.
+     *
+     * @param context     Context where {@link Context#startActivity(Intent)} will be executed.
+     * @param report      Report about a number.
+     * @param intentFlags Flags that should be set to the {@link Intent}. See {@link Intent#setFlags(int)} for details.
+     *
+     * @return True if the intent has been sent, false on error.
+     */
+    public static boolean report(@NonNull Context context, @NonNull Report report, int intentFlags) {
         ArrayList<Report> list = new ArrayList<>(1);
         list.add(report);
-        return report(context, list);
+        return report(context, list, intentFlags);
     }
 
     /**
@@ -323,9 +383,35 @@ public final class CallControl {
      *
      * @param context    Context where {@link Context#startActivity(Intent)} will be executed.
      * @param reports    List of numbers to report. Must all have identical {@link Report#isUnwanted} flag.
+     *
      * @return True if the intent has been sent, false on error.
      */
     public static boolean report(@NonNull Context context, @NonNull ArrayList<Report> reports) {
+        return report(context, reports, 0);
+    }
+
+    /**
+     * <p>Reports a set of numbers via Call Control UI.
+     * <p>Will present Call Control UI which interacts with user.
+     * <p>After user confirms the report, the number is also added to Blocked List.
+     * <p>
+     * <p><b>IMPORTANT:</b> Must contain the list with ALL items having the same value of the {@link Report#isUnwanted} flag.
+     * I.e. in one run you only report either unwanted or wanted numbers, but you cannot mix them in one call.
+     * <p>
+     * <p>Safe to execute with empty list, does nothing in this case.
+     * <p>
+     * <p>Useful when user enables the integration and the application wants to put already known
+     * blocked numbers to Call Control in one run.
+     *
+     * @throws IllegalArgumentException When {@link Report#isUnwanted} is not the same for all numbers.
+     *
+     * @param context     Context where {@link Context#startActivity(Intent)} will be executed.
+     * @param reports     List of numbers to report. Must all have identical {@link Report#isUnwanted} flag.
+     * @param intentFlags Flags that should be set to the {@link Intent}. See {@link Intent#setFlags(int)} for details.
+     *
+     * @return True if the intent has been sent, false on error.
+     */
+    public static boolean report(@NonNull Context context, @NonNull ArrayList<Report> reports, int intentFlags) {
         if (reports.isEmpty()) return false;
         boolean isUnwanted = reports.get(0).isUnwanted;
         for (Report n : reports) {
@@ -333,6 +419,7 @@ public final class CallControl {
         }
         Intent i = new Intent(ACTION_REPORT);
         i.putExtra(EXTRA_PHONE_NUMBER, reports);
+        if (0 != intentFlags) i.setFlags(intentFlags);
         if (!signIntent(context, i)) return false;
         context.startActivity(i);
         return true;
@@ -342,15 +429,28 @@ public final class CallControl {
      * Opens access settings for 3rd party apps within Call Control UI.
      *
      * @param context Context where {@link Context#startActivity(Intent)} will be executed.
+     *
      * @return True if the intent has been sent, false on error.
      */
     public static boolean openAccessSettings(@NonNull Context context) {
+        return openAccessSettings(context, 0);
+    }
+
+    /**
+     * Opens access settings for 3rd party apps within Call Control UI.
+     *
+     * @param context Context where {@link Context#startActivity(Intent)} will be executed.
+     * @param intentFlags Flags that should be set to the {@link Intent}. See {@link Intent#setFlags(int)} for details.
+     *
+     * @return True if the intent has been sent, false on error.
+     */
+    public static boolean openAccessSettings(@NonNull Context context, int intentFlags) {
         Intent i = new Intent(ACTION_3RD_PARTY_ACCESS);
+        if (0 != intentFlags) i.setFlags(intentFlags);
         if (!signIntent(context, i)) return false;
         context.startActivity(i);
         return true;
     }
-
 
     /**
      * Performs intent "signing", i.e. requesting and adding {@link #EXTRA_TOKEN} extra to the intent.
