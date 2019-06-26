@@ -20,7 +20,7 @@ To integrate with Call Control you need to install Call Control from [Google Pla
 ```gradle
 dependencies {
 	...
-	implementation 'com.callcontrol:datashare:1.0.0'
+	implementation 'com.callcontrol:datashare:1.1.0'
 	...
 }
 
