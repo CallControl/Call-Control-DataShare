@@ -16,7 +16,7 @@ ext {
     siteUrl = 'https://github.com/CallControl/Call-Control-DataShare'
     gitUrl = 'https://github.com/CallControl/Call-Control-DataShare.git'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.1.0'
 
     developerId = 'callcontrol'
     developerName = 'Call Control LLC'
@@ -33,8 +33,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1.0"
     }
     buildTypes {
         release {
