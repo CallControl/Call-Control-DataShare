@@ -71,6 +71,12 @@ public final class CallControl {
     public static final String ACTION_LOOKUP = "com.callcontrol.datashare.intent.action.LOOKUP";
 
     /**
+     * Intent action to add rule for a number via Call Control UI.
+     * <p>Intent must contain {@link #EXTRA_PHONE_NUMBER}.
+     */
+    public static final String ACTION_ADD_RULE = "com.callcontrol.datashare.intent.action.ADD_RULE";
+
+    /**
      * Intent action to lookup number via Call Control UI.
      * <p>Intent must contain {@link #EXTRA_PHONE_NUMBER}.
      */
@@ -334,6 +340,102 @@ public final class CallControl {
         context.startActivity(i);
         return true;
     }
+
+
+    /**
+     * <p>Create a rule to the set of numbers via Call Control UI.
+     * <p>Will present Call Control UI which interacts with user.
+     * <p>After added to Blocked List, suggest user to report blocked number.
+     * <p>
+     * <p><b>IMPORTANT:</b> Must contain the list with ALL items having the same value of the {@link Report#isUnwanted} flag.
+     * I.e. in one run you only report either unwanted or wanted numbers, but you cannot mix them in one call.
+     * <p>
+     * <p>Safe to execute with empty list, does nothing in this case.
+     *
+     *
+     * @param context      Context where {@link Context#startActivity(Intent)} will be executed.
+     * @param report       a numbers for a rule.
+     *
+     * @return True if the intent has been sent, false on error.
+     */
+    public static boolean addRule(@NonNull Context context, @NonNull Report report) {
+        return addRule(context, report, 0);
+    }
+
+    /**
+     * <p>Create a rule to the set of numbers via Call Control UI.
+     * <p>Will present Call Control UI which interacts with user.
+     * <p>After added to Blocked List, suggest user to report blocked number.
+     * <p>
+     * <p><b>IMPORTANT:</b> Must contain the list with ALL items having the same value of the {@link Report#isUnwanted} flag.
+     * I.e. in one run you only report either unwanted or wanted numbers, but you cannot mix them in one call.
+     * <p>
+     * <p>Safe to execute with empty list, does nothing in this case.
+     *
+     *
+     * @param context      Context where {@link Context#startActivity(Intent)} will be executed.
+     * @param report       a numbers for a rule.
+     * @param intentFlags Flags that should be set to the {@link Intent}. See {@link Intent#setFlags(int)} for details.
+     *
+     * @return True if the intent has been sent, false on error.
+     */
+    public static boolean addRule(@NonNull Context context, @NonNull Report report, int intentFlags) {
+        ArrayList<Report> list = new ArrayList<>(1);
+        list.add(report);
+        return addRule(context, list, intentFlags);
+    }
+
+    /**
+     * <p>Create a rule to the set of numbers via Call Control UI.
+     * <p>Will present Call Control UI which interacts with user.
+     * <p>After added to Blocked List, suggest user to report blocked number.
+     * <p>
+     * <p><b>IMPORTANT:</b> Must contain the list with ALL items having the same value of the {@link Report#isUnwanted} flag.
+     * I.e. in one run you only report either unwanted or wanted numbers, but you cannot mix them in one call.
+     * <p>
+     * <p>Safe to execute with empty list, does nothing in this case.
+     *
+     *
+     * @param context      Context where {@link Context#startActivity(Intent)} will be executed.
+     * @param reports     List of numbers.
+     *
+     * @return True if the intent has been sent, false on error.
+     */
+    public static boolean addRule(@NonNull Context context, @NonNull ArrayList<Report> reports) {
+        return addRule(context, reports, 0);
+    }
+
+    /**
+     * <p>Create a rule to the set of numbers via Call Control UI.
+     * <p>Will present Call Control UI which interacts with user.
+     * <p>After added to Blocked List, suggest user to report blocked number.
+     * <p>
+     * <p><b>IMPORTANT:</b> Must contain the list with ALL items having the same value of the {@link Report#isUnwanted} flag.
+     * I.e. in one run you only report either unwanted or wanted numbers, but you cannot mix them in one call.
+     * <p>
+     * <p>Safe to execute with empty list, does nothing in this case.
+     *
+     *
+     * @param context      Context where {@link Context#startActivity(Intent)} will be executed.
+     * @param reports     List of numbers.
+     * @param intentFlags Flags that should be set to the {@link Intent}. See {@link Intent#setFlags(int)} for details.
+     *
+     * @return True if the intent has been sent, false on error.
+     */
+    public static boolean addRule(@NonNull Context context, @NonNull ArrayList<Report> reports, int intentFlags) {
+        if (reports.isEmpty()) return false;
+        boolean isUnwanted = reports.get(0).isUnwanted;
+        for (Report n : reports) {
+            if (n.isUnwanted != isUnwanted) throw new IllegalArgumentException("All numbers reported must have identical isUnwanted flag");
+        }
+        Intent i = new Intent(ACTION_ADD_RULE);
+        i.putExtra(EXTRA_PHONE_NUMBER, reports);
+        if (0 != intentFlags) i.setFlags(intentFlags);
+        if (!signIntent(context, i)) return false;
+        context.startActivity(i);
+        return true;
+    }
+
 
     /**
      * Reports a number via Call Control UI.
