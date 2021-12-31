@@ -1,40 +1,22 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-
-ext {
-    bintrayRepo = 'opensource'
-    bintrayName = 'DataShare'
-    bintrayOrganization = 'callcontrol'
-
-    publishedGroupId = 'com.callcontrol'
-    libraryName = 'datashare'
-    artifact = 'datashare'
-
-    libraryDescription = 'Allows to interact with Call Control Application for Android, provides powerful calls/texts blocking possibilities for 3rd party apps without significant effort.'
-
-    siteUrl = 'https://github.com/CallControl/Call-Control-DataShare'
-    gitUrl = 'https://github.com/CallControl/Call-Control-DataShare.git'
-
-    libraryVersion = '1.2.0'
-
-    developerId = 'callcontrol'
-    developerName = 'Call Control LLC'
-    developerEmail = 'support@callcontrol.com'
-
-    licenseName = 'MIT License'
-    licenseUrl = 'http://www.opensource.org/licenses/mit-license.php'
-    allLicenses = ["MIT"]
+plugins {
+    id 'com.android.library'
 }
 
+ext {
+    PUBLISH_GROUP_ID = 'io.github.callcontrol'
+    PUBLISH_ARTIFACT_ID = 'datashare'
+    PUBLISH_VERSION = rootVersionName
+}
+
+apply from: "${rootDir}/scripts/publish-module.gradle"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 31
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 3
-        versionName "1.2.0"
+        minSdkVersion 23
+        targetSdkVersion 31
+        versionCode 4
+        versionName rootVersionName
     }
     buildTypes {
         release {
@@ -47,87 +29,4 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:support-annotations:28.0.0'
-}
-
-
-group = 'com.callcontrol'
-version = libraryVersion
-
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            packaging 'aar'
-            groupId publishedGroupId
-            artifactId artifact
-
-            name libraryName
-            description libraryDescription
-            url siteUrl
-
-            licenses {
-                license {
-                    name licenseName
-                    url licenseUrl
-                }
-            }
-            developers {
-                developer {
-                    id developerId
-                    name developerName
-                    email developerEmail
-                }
-            }
-            scm {
-                connection gitUrl
-                developerConnection gitUrl
-                url siteUrl
-            }
-        }
-    }
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.srcDirs
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    configurations = ['archives']
-    pkg {
-        repo = bintrayRepo
-        name = bintrayName
-        userOrg = bintrayOrganization
-        desc = libraryDescription
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = allLicenses
-        dryRun = false
-        publish = true
-        override = false
-        publicDownloadNumbers = false
-        version {
-            desc = libraryDescription
-        }
-    }
 }
