@@ -18,9 +18,14 @@ See [Wiki](wiki) for more details.
 To integrate with Call Control you need to install Call Control from [Google Play](https://play.google.com/store/apps/details?id=com.flexaspect.android.everycallcontrol), then in your application's `build.gradle` add the following dependency:
 
 ```gradle
+
+repositories {
+    mavenCentral()
+}
+    
 dependencies {
 	...
-	implementation 'com.callcontrol:datashare:1.3.0'
+	implementation 'io.github.callcontrol:datashare:1.3.0'
 	...
 }
 
