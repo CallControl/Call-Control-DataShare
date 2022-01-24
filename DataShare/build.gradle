@@ -3,7 +3,7 @@ plugins {
 }
 
 ext {
-    PUBLISH_GROUP_ID = 'io.github.callcontrol'
+    PUBLISH_GROUP_ID = 'com.callcontrol'
     PUBLISH_ARTIFACT_ID = 'datashare'
     PUBLISH_VERSION = rootVersionName
 }

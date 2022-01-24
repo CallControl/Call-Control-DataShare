@@ -1,6 +1,6 @@
 # Call Control DataShare
 
-[ ![Download](https://api.bintray.com/packages/callcontrol/opensource/DataShare/images/download.svg) ](https://bintray.com/callcontrol/opensource/DataShare/_latestVersion)
+[Download](https://s01.oss.sonatype.org/content/groups/public/com/callcontrol/datashare/)
 
 Call Control DataShare is a mechanism which allows other apps to interact with [Call Control for Android](https://play.google.com/store/apps/details?id=com.flexaspect.android.everycallcontrol) application. It allows to enable powerful calls/texts blocking possibilities in 3rd party apps without significant effort. 
 
@@ -25,7 +25,7 @@ repositories {
     
 dependencies {
 	...
-	implementation 'io.github.callcontrol:datashare:1.3.0'
+	implementation 'com.callcontrol:datashare:1.3.0'
 	...
 }
 
